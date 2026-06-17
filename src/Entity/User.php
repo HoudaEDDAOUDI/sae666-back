@@ -3,7 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
+use App\State\MyUserProvider;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -11,8 +17,29 @@ use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/users/me',
+            security: "is_granted('ROLE_USER')",
+            name: 'api_users_me',
+            provider: MyUserProvider::class
+        ),
+        new GetCollection(
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Post(
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Patch(
+            security: "is_granted('ROLE_ADMIN') or object == user"
+        ),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+    ]
+)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

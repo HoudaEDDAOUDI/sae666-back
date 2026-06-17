@@ -26,8 +26,6 @@ security:
             pattern: ^/api
             stateless: true
             provider: app_user_provider
-            custom_authenticators:
-                - App\Security\Authenticator\TokenAuthenticator
             jwt: ~
         dev:
             # Ensure dev tools and static assets are always allowed
