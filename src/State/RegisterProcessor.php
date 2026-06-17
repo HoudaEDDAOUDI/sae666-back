@@ -24,7 +24,10 @@ class RegisterProcessor implements ProcessorInterface
     {
         $user = new User();
         $user->setEmail($data->email);
+        $user->setName($data->name);
+        $user->setPhoto($data->photo);
         $user->setPassword($this->passwordHasher->hashPassword($user, $data->password));
+        $user->setRoles(['ROLE_USER']);
 
         $this->em->persist($user);
         $this->em->flush();
