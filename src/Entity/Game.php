@@ -33,7 +33,7 @@ class Game
     private ?int $nbr_player = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[Groups(['user:read', 'game:read'])]
+    #[Groups(['user:read', 'game:read', 'usergame:read'])]
     private ?User $winner = null;
 
     public function getId(): ?int {
