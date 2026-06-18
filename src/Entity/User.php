@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -18,6 +20,9 @@ use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ApiFilter(SearchFilter::class, properties: [
+    'name' => 'partial'
+])]
 #[ApiResource(
     operations: [
         new Get(
@@ -31,9 +36,10 @@ use Symfony\Component\Serializer\Attribute\Ignore;
             name: 'api_users_me',
             provider: MyUserProvider::class
         ),
-        new GetCollection(
-//            security: "is_granted('ROLE_ADMIN')"
+        new Get(
+            security: "is_granted('ROLE_USER')"
         ),
+        new GetCollection(),
         new Post(
             security: "is_granted('ROLE_ADMIN')"
         ),
@@ -63,6 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['usergame:read'])]
     private array $roles = [];
 
     /**
