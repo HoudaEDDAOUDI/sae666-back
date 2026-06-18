@@ -15,12 +15,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['game:read']]
 )]
+#[ORM\HasLifecycleCallbacks]
 class Game
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'game:read'])]
+    #[Groups(['user:read', 'game:read', 'usergame:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -31,12 +32,20 @@ class Game
     #[Groups(['user:read', 'game:read'])]
     private ?int $nbr_player = null;
 
-    #[ORM\Column]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[Groups(['user:read', 'game:read'])]
-    private ?int $id_winner = null;
+    private ?User $winner = null;
 
     public function getId(): ?int {
         return $this->id;
+    }
+
+    #[ORM\PrePersist]
+    public function onCreateTimestamp(): void
+    {
+        if ($this->created_at === null) {
+            $this->created_at = new \DateTimeImmutable();
+        }
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable {
@@ -54,10 +63,14 @@ class Game
         $this->nbr_player = $nbr_player; return $this;
     }
 
-    public function getIdWinner(): ?int {
-        return $this->id_winner;
+    public function getWinner(): ?User
+    {
+        return $this->winner;
     }
-    public function setIdWinner(int $id_winner): static {
-        $this->id_winner = $id_winner; return $this;
+
+    public function setWinner(?User $winner): static
+    {
+        $this->winner = $winner;
+        return $this;
     }
 }

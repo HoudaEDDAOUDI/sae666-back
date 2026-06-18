@@ -14,21 +14,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
     'user.id' => 'exact',
     'game.id' => 'exact',
 ])]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['usergame:read']]
+)]
 class UserGame
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['game:read', 'usergame:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['game:read', 'usergame:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne]
+    #[Groups(['game:read','usergame:read'])]
     private ?Game $game = null;
 
     #[ORM\Column]
+    #[Groups(['game:read', 'usergame:read'])]
     private ?int $score = null;
 
     public function getId(): ?int
