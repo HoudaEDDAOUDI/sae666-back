@@ -13,6 +13,7 @@ use App\State\MyUserProvider;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -20,13 +21,18 @@ use Symfony\Component\Serializer\Attribute\Ignore;
 #[ApiResource(
     operations: [
         new Get(
+            uriTemplate: '/users/{id}',
+            requirements: ['id' => '\d+'],
+//            security: "is_granted('ROLE_ADMIN') or object == user"
+        ),
+        new Get(
             uriTemplate: '/users/me',
             security: "is_granted('ROLE_USER')",
             name: 'api_users_me',
             provider: MyUserProvider::class
         ),
         new GetCollection(
-            security: "is_granted('ROLE_ADMIN')"
+//            security: "is_granted('ROLE_ADMIN')"
         ),
         new Post(
             security: "is_granted('ROLE_ADMIN')"
@@ -37,7 +43,7 @@ use Symfony\Component\Serializer\Attribute\Ignore;
         new Delete(
             security: "is_granted('ROLE_ADMIN')"
         ),
-    ]
+    ],
 )]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\HasLifecycleCallbacks]
@@ -46,9 +52,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['game:read','usergame:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['game:read','usergame:read'])]
     private ?string $email = null;
 
     /**
@@ -65,12 +73,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['game:read','usergame:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['game:read','usergame:read'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['game:read','usergame:read'])]
     private ?string $photo = null;
 
     public function getId(): ?int

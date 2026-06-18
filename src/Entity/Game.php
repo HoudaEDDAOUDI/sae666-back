@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,7 +43,8 @@ class Game
         return $this->created_at;
     }
     public function setCreatedAt(\DateTimeImmutable $created_at): static {
-        $this->created_at = $created_at; return $this;
+        $this->created_at = $created_at;
+        return $this;
     }
 
     public function getNbrPlayer(): ?int {

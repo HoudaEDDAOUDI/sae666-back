@@ -2,12 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserGameRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserGameRepository::class)]
-#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: [
+    'user.id' => 'exact',
+    'game.id' => 'exact',
+])]
+#[ApiResource()]
 class UserGame
 {
     #[ORM\Id]
