@@ -21,6 +21,9 @@ class UserGame
     #[ORM\ManyToOne]
     private ?Game $game = null;
 
+    #[ORM\Column]
+    private ?int $score = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,6 +49,18 @@ class UserGame
     public function setGame(?Game $game): static
     {
         $this->game = $game;
+
+        return $this;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(int $score): static
+    {
+        $this->score = $score;
 
         return $this;
     }

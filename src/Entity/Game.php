@@ -23,10 +23,6 @@ class Game
 
     #[ORM\Column]
     #[Groups(['user:read', 'game:read'])]
-    private ?int $score = null;
-
-    #[ORM\Column]
-    #[Groups(['user:read', 'game:read'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
@@ -37,14 +33,8 @@ class Game
     #[Groups(['user:read', 'game:read'])]
     private ?int $id_winner = null;
 
-    public function getId(): ?int { return $this->id; }
-
-    public function getScore(): ?int {
-        return $this->score;
-    }
-    public function setScore(int $score): static {
-        $this->score = $score;
-        return $this;
+    public function getId(): ?int {
+        return $this->id;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable {
